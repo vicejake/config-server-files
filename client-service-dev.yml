@@ -1,0 +1,29 @@
+server:
+  port: ${CUSTOM.SERVER.PORT:9005}
+
+# Circuit Breaker configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+      mitocode-circuitbreaker: # cualquierId
+        slidingWindowSize: 15
+        failureRateThreshold: 20
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 8
+        slowCallDurationThreshold: 1s
+        slowCallRateThreshold: 50
+        
+    instances:
+      user-service-cb:
+        base-config: mitocode-circuitbreaker #cualquierId
+
+#Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        base-path: /actuator
+  tracing:
+    sampling:
+      probability: 1.0
